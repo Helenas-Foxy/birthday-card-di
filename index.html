@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>С днем рождения, Диана!</title>
+    <style>
+        :root {
+            --deep-blue: #060d1a;
+            --ocean-blue: #0a1a33;
+            --foam-white: #e8f0f8;
+            --text-white: #ffffff;
+            --glow-blue: #4da8da;
+            --terminal-bg: #050a14;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: var(--deep-blue);
+            color: var(--text-white);
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            cursor: default;
+        }
+
+        /* ========== PAGE CONTAINERS ========== */
+        .page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .page-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* ========== PAGE 1 - OCEAN SCENE ========== */
+        #page1 {
+            z-index: 10;
+        }
+        #page1.page-visible {
+            z-index: 10;
+        }
+        #page1.page-hidden {
+            z-index: 0;
+        }
+
+        #waveCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        /* Ship button */
+        .ship-container {
+            position: relative;
+            z-index: 20;
+            cursor: pointer;
+            animation: shipBob 3.2s ease-in-out infinite;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            filter: drop-shadow(0 0 18px rgba(140, 200, 240, 0.5));
+        }
+        .ship-container:hover {
+            transform: scale(1.08);
+            filter: drop-shadow(0 0 35px rgba(160, 220, 255, 0.85));
+        }
+        .ship-container:active {
+            transform: scale(0.94);
+            filter: drop-shadow(0 0 50px rgba(180, 230, 255, 1));
+            transition: transform 0.1s ease, filter 0.1s ease;
+        }
+        .ship-container.loading-active {
+            pointer-events: none;
+            animation: shipBobFast 0.6s ease-in-out infinite;
+            filter: drop-shadow(0 0 40px rgba(100, 200, 255, 0.9));
+        }
+
+        @keyframes shipBob {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            25% {
+                transform: translateY(-14px);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+            75% {
+                transform: translateY(-18px);
+            }
+        }
+        @keyframes shipBobFast {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Ship SVG styles */
+        .ship-svg {
+            width: 180px;
+            height: auto;
+            display: block;
+        }
+        @media (max-width: 600px) {
+            .ship-svg {
+                width: 130px;
+            }
+        }
+        .ship-hull {
+            fill: #1c3a5c;
+            stroke: #c8dff5;
+            stroke-width: 2.5;
+            stroke-linejoin: round;
+        }
+        .ship-sail-main {
+            fill: #f0f5fb;
+            stroke: #d0e2f2;
+stroke-width: 1.5;
+        }
+        .ship-sail-small {
+            fill: #e8eef6;
+            stroke: #c8d8ea;
+            stroke-width: 1.2;
+        }
+        .ship-mast {
+            stroke: #c8dff5;
+            stroke-width: 3;
+            stroke-linecap: round;
+        }
+        .ship-flag {
+            fill: #e8745c;
+        }
+        .ship-porthole {
+            fill: #ffe8b0;
+        }
+
+        /* ========== LOADING OVERLAY ========== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3, 8, 20, 0.82);
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .loading-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .terminal-window {
+            background: var(--terminal-bg);
+            border: 1.5px solid rgba(120, 180, 220, 0.5);
+            border-radius: 14px;
+            padding: 28px 32px;
+            min-width: 340px;
+            max-width: 500px;
+            width: 85%;
+            box-shadow: 0 0 60px rgba(30, 100, 180, 0.45),
+                inset 0 0 40px rgba(10, 40, 80, 0.3);
+            font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+            color: #c8e0f8;
+            font-size: 14px;
+            line-height: 1.7;
+            letter-spacing: 0.5px;
+        }
+        @media (max-width: 500px) {
+            .terminal-window {
+                padding: 18px 16px;
+                min-width: auto;
+                font-size: 12px;
+                border-radius: 10px;
+            }
+        }
+        .terminal-line {
+            opacity: 0;
+            animation: terminalAppear 0.08s ease forwards;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .terminal-line.visible {
+            opacity: 1;
+        }
+        @keyframes terminalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(2px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #c8e0f8;
+            animation: cursorBlink 0.7s step-end infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+        @keyframes cursorBlink {
+            50% {
+                opacity: 0;
+            }
+        }
+        .terminal-progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(30, 60, 100, 0.5);
+            border-radius: 3px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+        .terminal-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4da8da, #8cd0f0, #4da8da);
+            border-radius: 3px;
+            transition: width 0.3s linear;
+            box-shadow: 0 0 12px rgba(80, 170, 220, 0.7);
+        }
+
+        /* Open button inside terminal */
+        .open-btn-container {
+            text-align: center;
+            margin-top: 14px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+        }
+        .open-btn-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .open-btn {
+            display: inline-block;
+            padding: 13px 32px;
+            background: linear-gradient(135deg, #1a4a7a, #0d2d50);
+            border: 2px solid #6ab8e0;
+            border-radius: 30px;
+            color: #e8f4ff;
+font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 25px rgba(70, 150, 210, 0.5);
+            white-space: nowrap;
+        }
+        .open-btn:hover {
+            background: linear-gradient(135deg, #1e5a90, #123860);
+            border-color: #90d4f8;
+            box-shadow: 0 0 45px rgba(90, 180, 240, 0.8);
+            transform: scale(1.04);
+            color: #ffffff;
+        }
+        .open-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 0 60px rgba(100, 200, 255, 1);
+            transition: transform 0.1s ease;
+        }
+        @media (max-width: 500px) {
+            .open-btn {
+                padding: 10px 22px;
+                font-size: 13px;
+                letter-spacing: 0.5px;
+            }
+        }
+
+        /* ========== PAGE 2 - FIREWORKS & MESSAGE ========== */
+        #page2 {
+            z-index: 0;
+            background: var(--deep-blue);
+        }
+        #page2.page-visible {
+            z-index: 20;
+        }
+        #page2.page-hidden {
+            z-index: 0;
+        }
+        #fireworkCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .birthday-message {
+            position: relative;
+            z-index: 25;
+            text-align: center;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.5s ease 1.8s, transform 1.5s ease 1.8s;
+        }
+        .birthday-message.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .birthday-message h1 {
+            font-size: clamp(1.8rem, 5vw, 3.2rem);
+            font-weight: 300;
+            letter-spacing: 3px;
+            line-height: 1.5;
+            text-shadow: 0 0 40px rgba(180, 210, 240, 0.7),
+                0 0 80px rgba(140, 180, 220, 0.4),
+                0 0 120px rgba(100, 150, 200, 0.3);
+            color: #f8fafd;
+        }
+        .birthday-message .name {
+            font-weight: 700;
+            letter-spacing: 5px;
+            font-size: clamp(2.2rem, 6vw, 4rem);
+            display: block;
+            margin-bottom: 8px;
+            text-shadow: 0 0 50px rgba(220, 200, 160, 0.8),
+                0 0 100px rgba(200, 170, 130, 0.5),
+                0 0 160px rgba(180, 150, 110, 0.3);
+            color: #fff8ed;
+        }
+        .birthday-message .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            font-weight: 300;
+            letter-spacing: 2px;
+            opacity: 0.9;
+            margin-top: 6px;
+            color: #dce8f4;
+            text-shadow: 0 0 20px rgba(160, 200, 230, 0.5);
+        }
+
+        /* Sparkle particles on page 2 */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 26;
+            width: 4px;
+            height: 4px;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: sparkleFloat 2.5s ease-out forwards;
+            box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8);
+        }
+        @keyframes sparkleFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-180px) scale(0.2);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== PAGE 1 - OCEAN SCENE ==================== -->
+    <div id="page1" class="page page-visible">
+        <!-- Ocean waves canvas -->
+        <canvas id="waveCanvas"></canvas>
+
+        <!-- Ship button -->
+        <div class="ship-container" id="shipBtn" title="Запустить Di.Nic v. 3.5">
+<svg class="ship-svg" viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg">
+                <!-- Mast -->
+                <line x1="100" y1="20" x2="100" y2="120" class="ship-mast"/>
+                <!-- Main sail -->
+                <path d="M102 28 L160 105 L102 105 Z" class="ship-sail-main"/>
+                <!-- Small sail -->
+                <path d="M98 45 L45 100 L98 100 Z" class="ship-sail-small"/>
+                <!-- Flag -->
+                <path d="M100 20 L130 20 L120 32 L128 42 L100 30 Z" class="ship-flag"/>
+                <!-- Hull -->
+                <path d="M30 118 L170 118 L155 145 L45 145 Z"
+                class="ship-hull" rx="4"/>
+                <!-- Hull bottom curve -->
+                <ellipse cx="100" cy="145" rx="55" ry="10" class="ship-hull" stroke-width="2"/>
+                <!-- Portholes -->
+                <circle cx="75" cy="132" r="5" class="ship-porthole" stroke="#c8dff5" stroke-width="1"/>
+                <circle cx="100" cy="132" r="5" class="ship-porthole" stroke="#c8dff5" stroke-width="1"/>
+                <circle cx="125" cy="132" r="5" class="ship-porthole" stroke="#c8dff5" stroke-width="1"/>
+                <!-- Bow decoration -->
+                <line x1="30" y1="118" x2="18" y2="108" stroke="#c8dff5" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- ==================== LOADING OVERLAY ==================== -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="terminal-window" id="terminalWindow">
+            <div class="terminal-line" data-delay="0">> Di.Nic v. 3.5 — Boot Sequence</div>
+            <div class="terminal-line" data-delay="600">> ──────────────────────────</div>
+            <div class="terminal-line" data-delay="1000">> Проверка системы <span style="color:#7be8a0;">✓ OK</span></div>
+            <div class="terminal-line" data-delay="1500">> Загрузка навигационных модулей <span style="color:#7be8a0;">✓ OK</span></div>
+            <div class="terminal-line" data-delay="2000">> Калибровка компаса <span style="color:#7be8a0;">✓ OK</span></div>
+            <div class="terminal-line" data-delay="2400">> Установка соединения <span style="color:#7be8a0;">✓ OK</span></div>
+            <div class="terminal-line" data-delay="2700" style="margin-top:4px;">> Прогресс инициализации:</div>
+            <div class="terminal-progress-bar" style="margin:6px 0 10px 0;">
+                <div class="terminal-progress-fill" id="progressFill"></div>
+            </div>
+            <div class="terminal-line" data-delay="3200" id="readyLine">> Все системы готовы. <span class="terminal-cursor"></span></div>
+            <div class="open-btn-container" id="openBtnContainer">
+                <button class="open-btn" id="openBtn">Open Di.Nic v. 3.5</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 2 - FIREWORKS & MESSAGE ==================== -->
+    <div id="page2" class="page page-hidden">
+        <canvas id="fireworkCanvas"></canvas>
+        <div class="birthday-message" id="birthdayMsg">
+            <h1>
+                <span class="name">С днем рождения, Диана!</span>
+                <span class="subtitle">Пусть в жизни будут только<br>приятные путешествия!</span>
+            </h1>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ==================== DOM REFERENCES ====================
+            const page1 = document.getElementById('page1');
+            const page2 = document.getElementById('page2');
+            const shipBtn = document.getElementById('shipBtn');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const progressFill = document.getElementById('progressFill');
+            const openBtnContainer = document.getElementById('openBtnContainer');
+            const openBtn = document.getElementById('openBtn');
+            const birthdayMsg = document.getElementById('birthdayMsg');
+const waveCanvas = document.getElementById('waveCanvas');
+            const waveCtx = waveCanvas.getContext('2d');
+            const fireworkCanvas = document.getElementById('fireworkCanvas');
+            const fireworkCtx = fireworkCanvas.getContext('2d');
+
+            // ==================== AUDIO SYSTEM (Web Audio API) ====================
+            let audioCtx = null;
+            let ambientGain = null;
+            let isAudioStarted = false;
+
+            function initAudio() {
+                if (isAudioStarted) return;
+                try {
+                    audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                    ambientGain = audioCtx.createGain();
+                    ambientGain.gain.value = 0;
+                    ambientGain.connect(audioCtx.destination);
+
+                    // Create a warm ambient pad using multiple oscillators
+                    const createPad = (freq, gainVal, detune = 0) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.value = freq;
+                        osc.detune.value = detune;
+                        gain.gain.value = gainVal;
+                        osc.connect(gain);
+                        gain.connect(ambientGain);
+                        osc.start();
+                        return { osc, gain };
+                    };
+
+                    // Gentle layered drones
+                    const pads = [
+                        createPad(110, 0.06, 0), // Low drone
+                        createPad(165, 0.04, 3), // Fifth
+                        createPad(220, 0.03, -2), // Octave
+                        createPad(277, 0.025, 5), // Major third above
+                        createPad(330, 0.02, -4), // Higher octave
+                    ];
+
+                    // Add subtle filtered noise for ocean texture
+                    const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 4, audioCtx.sampleRate);
+                    const noiseData = noiseBuffer.getChannelData(0);
+                    for (let i = 0; i < noiseData.length; i++) {
+                        noiseData[i] = (Math.random() * 2 - 1) * 0.3;
+                    }
+                    const noiseSource = audioCtx.createBufferSource();
+                    noiseSource.buffer = noiseBuffer;
+                    noiseSource.loop = true;
+                    const noiseFilter = audioCtx.createBiquadFilter();
+                    noiseFilter.type = 'lowpass';
+                    noiseFilter.frequency.value = 350;
+                    noiseFilter.Q.value = 0.5;
+                    const noiseGain = audioCtx.createGain();
+                    noiseGain.gain.value = 0.03;
+                    noiseSource.connect(noiseFilter);
+                    noiseFilter.connect(noiseGain);
+                    noiseGain.connect(ambientGain);
+                    noiseSource.start();
+
+                    // Slow LFO modulation for evolving sound
+                    const lfo = audioCtx.createOscillator();
+                    lfo.type = 'sine';
+                    lfo.frequency.value = 0.08; // Very slow
+                    const lfoGain = audioCtx.createGain();
+                    lfoGain.gain.value = 8;
+                    lfo.connect(lfoGain);
+                    lfoGain.connect(ambientGain.gain);
+                    lfo.start();
+
+                    // Smoothly fade in
+                    ambientGain.gain.setTargetAtTime(0.25, audioCtx.currentTime, 2.5);
+
+                    isAudioStarted = true;
+                    console.log('🎵 Ambient audio initialized');
+                } catch (e) {
+                    console.warn('Audio init failed:', e);
+                }
+            }
+
+            function fadeOutAudio() {
+                if (audioCtx && ambientGain && isAudioStarted) {
+ambientGain.gain.setTargetAtTime(0.001, audioCtx.currentTime, 1.5);
+                }
+            }
+
+            // ==================== WAVE CANVAS ====================
+            let waveAnimationId;
+            let waveTime = 0;
+            const foamParticles = [];
+
+            function resizeWaveCanvas() {
+                waveCanvas.width = window.innerWidth;
+                waveCanvas.height = window.innerHeight;
+            }
+            resizeWaveCanvas();
+            window.addEventListener('resize', resizeWaveCanvas);
+
+            // Pre-generate foam particles
+            function seedFoamParticles() {
+                foamParticles.length = 0;
+                const count = Math.floor(waveCanvas.width / 12);
+                for (let i = 0; i < count; i++) {
+                    foamParticles.push({
+                        x: Math.random() * waveCanvas.width,
+                        baseY: Math.random() * waveCanvas.height * 0.7 + waveCanvas.height * 0.15,
+                        radius: Math.random() * 3.5 + 1,
+                        speed: Math.random() * 0.4 + 0.1,
+                        offset: Math.random() * Math.PI * 2,
+                        amplitude: Math.random() * 16 + 4,
+                        opacity: Math.random() * 0.6 + 0.25,
+                    });
+                }
+            }
+            seedFoamParticles();
+            window.addEventListener('resize', seedFoamParticles);
+
+            function drawWaves(timestamp) {
+                waveTime = timestamp * 0.001;
+                const w = waveCanvas.width;
+                const h = waveCanvas.height;
+                waveCtx.clearRect(0, 0, w, h);
+
+                // Draw gradient sky reflection at top
+                const skyGrad = waveCtx.createLinearGradient(0, 0, 0, h * 0.55);
+                skyGrad.addColorStop(0, '#030d1f');
+                skyGrad.addColorStop(0.5, '#061530');
+                skyGrad.addColorStop(1, '#0a1e3d');
+                waveCtx.fillStyle = skyGrad;
+                waveCtx.fillRect(0, 0, w, h * 0.55);
+
+                // Wave layers - drawn back to front
+                const waveLayers = [
+                    { baseY: h * 0.52, amplitude: 38, frequency: 0.012, speed: 0.5, color: '#0d2a50',
+                        foamOpacity: 0.55 },
+                    { baseY: h * 0.57, amplitude: 44, frequency: 0.015, speed: 0.7, color: '#0f3058',
+                        foamOpacity: 0.6 },
+                    { baseY: h * 0.63, amplitude: 50, frequency: 0.018, speed: 0.85, color: '#113660',
+                        foamOpacity: 0.7 },
+                    { baseY: h * 0.70, amplitude: 55, frequency: 0.021, speed: 1.0, color: '#133d6a',
+                        foamOpacity: 0.75 },
+                    { baseY: h * 0.78, amplitude: 48, frequency: 0.025, speed: 1.15, color: '#154472',
+                        foamOpacity: 0.8 },
+                ];
+
+                waveLayers.forEach((layer) => {
+                    waveCtx.beginPath();
+                    waveCtx.moveTo(0, h);
+
+                    const points = [];
+                    const step = 3;
+                    for (let x = 0; x <= w + step; x += step) {
+                        const nx = x * layer.frequency;
+                        const y = layer.baseY +
+                            Math.sin(nx + waveTime * layer.speed) * layer.amplitude +
+                            Math.sin(nx * 2.3 + waveTime * layer.speed * 1.4) * (layer.amplitude * 0.35) +
+                            Math.sin(nx * 0.5 + waveTime * layer.speed * 0.6) * (layer.amplitude * 0.25);
+                        points.push({ x, y });
+                        waveCtx.lineTo(x, y);
+                    }
+
+                    waveCtx.lineTo(w, h);
+                    waveCtx.closePath();
+
+                    // Fill wave
+                    const waveGrad = waveCtx.createLinearGradient(0, layer.baseY - layer.amplitude - 10, 0,
+                        h);
+                    waveGrad.addColorStop(0, layer.color);
+waveGrad.addColorStop(0.5, '#0c2445');
+                    waveGrad.addColorStop(1, '#060d1a');
+                    waveCtx.fillStyle = waveGrad;
+                    waveCtx.fill();
+
+                    // Draw foam along crest
+                    waveCtx.beginPath();
+                    waveCtx.strokeStyle = `rgba(210,230,250,${layer.foamOpacity})`;
+                    waveCtx.lineWidth = 2.5;
+                    for (let i = 1; i < points.length - 1; i++) {
+                        const prev = points[i - 1];
+                        const curr = points[i];
+                        const next = points[i + 1];
+                        // Check if this point is near a crest (local maximum)
+                        if (curr.y < prev.y && curr.y < next.y) {
+                            // Near crest - draw foam highlight
+                            waveCtx.beginPath();
+                            waveCtx.moveTo(curr.x - 2, curr.y - 1);
+                            waveCtx.lineTo(curr.x + 2, curr.y - 1);
+                            waveCtx.strokeStyle =
+                                `rgba(235,245,255,${layer.foamOpacity + 0.15})`;
+                            waveCtx.lineWidth = 3.5;
+                            waveCtx.stroke();
+
+                            // Small foam dots near crest
+                            for (let d = 0; d < 3; d++) {
+                                const dotX = curr.x + (Math.random() - 0.5) * 18;
+                                const dotY = curr.y - Math.random() * 8 - 2;
+                                waveCtx.beginPath();
+                                waveCtx.arc(dotX, dotY, Math.random() * 2.5 + 0.8, 0, Math.PI * 2);
+                                waveCtx.fillStyle =
+                                    `rgba(240,248,255,${Math.random() * 0.5 + 0.3})`;
+                                waveCtx.fill();
+                            }
+                        }
+                    }
+                });
+
+                // Draw floating foam particles
+                foamParticles.forEach((fp) => {
+                    const waveInfluence = Math.sin(fp.x * 0.02 + waveTime * 0.6) * fp.amplitude +
+                        Math.sin(fp.x * 0.045 + waveTime * 0.9) * fp.amplitude * 0.5;
+                    const y = fp.baseY + waveInfluence + Math.sin(waveTime * fp.speed + fp.offset) * 6;
+                    waveCtx.beginPath();
+                    waveCtx.arc(fp.x, y, fp.radius, 0, Math.PI * 2);
+                    waveCtx.fillStyle = `rgba(235,245,255,${fp.opacity})`;
+                    waveCtx.fill();
+                    // Subtle glow
+                    waveCtx.beginPath();
+                    waveCtx.arc(fp.x, y, fp.radius * 2, 0, Math.PI * 2);
+                    waveCtx.fillStyle = `rgba(200,225,250,${fp.opacity * 0.3})`;
+                    waveCtx.fill();
+                });
+
+                waveAnimationId = requestAnimationFrame(drawWaves);
+            }
+            waveAnimationId = requestAnimationFrame(drawWaves);
+
+            // ==================== FIREWORKS SYSTEM ====================
+            let fireworkAnimationId;
+            let fireworks = [];
+            let fireworkParticles = [];
+            let fireworkTime = 0;
+            let fireworksActive = false;
+
+            function resizeFireworkCanvas() {
+                fireworkCanvas.width = window.innerWidth;
+                fireworkCanvas.height = window.innerHeight;
+            }
+            resizeFireworkCanvas();
+            window.addEventListener('resize', resizeFireworkCanvas);
+
+            class FireworkRocket {
+                constructor(canvasW, canvasH) {
+                    this.x = Math.random() * canvasW * 0.7 + canvasW * 0.15;
+                    this.y = canvasH;
+                    this.targetY = Math.random() * canvasH * 0.35 + canvasH * 0.08;
+                    this.speed = Math.random() * 5 + 7;
+                    this.trail = [];
+                    this.exploded = false;
+this.color = this.randomColor();
+                    this.particleCount = Math.floor(Math.random() * 60 + 80);
+                }
+                randomColor() {
+                    const palettes = [
+                        { r: 255, g: 220, b: 140 }, // warm gold
+                        { r: 255, g: 180, b: 160 }, // soft coral
+                        { r: 180, g: 210, b: 255 }, // light blue
+                        { r: 255, g: 240, b: 200 }, // cream
+                        { r: 220, g: 180, b: 255 }, // lavender
+                        { r: 255, g: 200, b: 180 }, // peach
+                        { r: 200, g: 230, b: 255 }, // sky
+                    ];
+                    return palettes[Math.floor(Math.random() * palettes.length)];
+                }
+                update() {
+                    if (!this.exploded) {
+                        this.trail.push({ x: this.x, y: this.y, alpha: 0.8 });
+                        if (this.trail.length > 18) this.trail.shift();
+                        this.y -= this.speed;
+                        this.speed *= 0.985;
+                        if (this.y <= this.targetY || this.speed < 1.5) {
+                            this.explode();
+                        }
+                    }
+                }
+                explode() {
+                    this.exploded = true;
+                    for (let i = 0; i < this.particleCount; i++) {
+                        const angle = (Math.PI * 2 * i) / this.particleCount + (Math.random() - 0.5) * 0.3;
+                        const velocity = Math.random() * 8 + 2;
+                        const vx = Math.cos(angle) * velocity;
+                        const vy = Math.sin(angle) * velocity;
+                        fireworkParticles.push({
+                            x: this.x,
+                            y: this.y,
+                            vx: vx,
+                            vy: vy,
+                            alpha: 1,
+                            decay: Math.random() * 0.015 + 0.008,
+                            color: this.color,
+                            radius: Math.random() * 2.5 + 1.2,
+                            gravity: 0.04,
+                        });
+                    }
+                    // Add sparkle burst
+                    for (let i = 0; i < 25; i++) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const velocity = Math.random() * 12 + 4;
+                        fireworkParticles.push({
+                            x: this.x,
+                            y: this.y,
+                            vx: Math.cos(angle) * velocity,
+                            vy: Math.sin(angle) * velocity,
+                            alpha: 1,
+                            decay: Math.random() * 0.03 + 0.02,
+                            color: { r: 255, g: 255, b: 240 },
+                            radius: Math.random() * 1.5 + 0.5,
+                            gravity: 0.03,
+                            sparkle: true,
+                        });
+                    }
+                }
+            }
+
+            function drawFireworks(timestamp) {
+                if (!fireworksActive && fireworkParticles.length === 0 && fireworks.length === 0) {
+                    fireworkAnimationId = requestAnimationFrame(drawFireworks);
+                    return;
+                }
+                fireworkTime = timestamp * 0.001;
+                const w = fireworkCanvas.width;
+                const h = fireworkCanvas.height;
+                fireworkCtx.clearRect(0, 0, w, h);
+
+                // Draw subtle dark background gradient
+                const bgGrad = fireworkCtx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) / 1.5);
+                bgGrad.addColorStop(0, '#0d1a35');
+                bgGrad.addColorStop(1, '#030a18');
+                fireworkCtx.fillStyle = bgGrad;
+                fireworkCtx.fillRect(0, 0, w, h);
+
+                // Launch new rockets periodically
+if (fireworksActive && Math.random() < 0.04 && fireworks.length < 6) {
+                    fireworks.push(new FireworkRocket(w, h));
+                }
+
+                // Update and draw rockets
+                for (let i = fireworks.length - 1; i >= 0; i--) {
+                    const rocket = fireworks[i];
+                    rocket.update();
+                    // Draw trail
+                    if (!rocket.exploded && rocket.trail.length > 1) {
+                        fireworkCtx.beginPath();
+                        fireworkCtx.moveTo(rocket.trail[0].x, rocket.trail[0].y);
+                        for (let t = 1; t < rocket.trail.length; t++) {
+                            fireworkCtx.lineTo(rocket.trail[t].x, rocket.trail[t].y);
+                        }
+                        fireworkCtx.strokeStyle = 'rgba(255,240,210,0.5)';
+                        fireworkCtx.lineWidth = 2;
+                        fireworkCtx.stroke();
+                        // Rocket head
+                        fireworkCtx.beginPath();
+                        fireworkCtx.arc(rocket.x, rocket.y, 3, 0, Math.PI * 2);
+                        fireworkCtx.fillStyle = 'rgba(255,255,240,0.9)';
+                        fireworkCtx.fill();
+                        fireworkCtx.shadowColor = 'rgba(255,240,200,0.8)';
+                        fireworkCtx.shadowBlur = 10;
+                        fireworkCtx.fill();
+                        fireworkCtx.shadowBlur = 0;
+                    }
+                    if (rocket.exploded) {
+                        fireworks.splice(i, 1);
+                    }
+                }
+
+                // Update and draw particles
+                for (let i = fireworkParticles.length - 1; i >= 0; i--) {
+                    const p = fireworkParticles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += p.gravity;
+                    p.vx *= 0.99;
+                    p.alpha -= p.decay;
+                    if (p.alpha <= 0) {
+                        fireworkParticles.splice(i, 1);
+                        continue;
+                    }
+                    fireworkCtx.beginPath();
+                    fireworkCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    const col = `rgba(${p.color.r},${p.color.g},${p.color.b},${p.alpha})`;
+                    fireworkCtx.fillStyle = col;
+                    fireworkCtx.fill();
+                    if (p.sparkle) {
+                        fireworkCtx.shadowColor = col;
+                        fireworkCtx.shadowBlur = 6;
+                        fireworkCtx.fill();
+                        fireworkCtx.shadowBlur = 0;
+                    }
+                }
+
+                fireworkAnimationId = requestAnimationFrame(drawFireworks);
+            }
+            fireworkAnimationId = requestAnimationFrame(drawFireworks);
+
+            function startFireworks() {
+                fireworksActive = true;
+                fireworks.length = 0;
+                fireworkParticles.length = 0;
+                // Launch initial burst
+                const w = fireworkCanvas.width;
+                const h = fireworkCanvas.height;
+                for (let i = 0; i < 5; i++) {
+                    const rocket = new FireworkRocket(w, h);
+                    rocket.targetY = Math.random() * h * 0.3 + h * 0.05;
+                    rocket.y = h + Math.random() * 60;
+                    fireworks.push(rocket);
+                }
+                // Schedule more bursts
+                setTimeout(() => {
+                    if (fireworksActive) {
+                        for (let i = 0; i < 4; i++) {
+                            const rocket = new FireworkRocket(w, h);
+                            rocket.targetY = Math.random() * h * 0.4 + h * 0.04;
+                            rocket.y = h + Math.random() * 40;
+                            fireworks.push(rocket);
+                        }
+                    }
+                }, 1200);
+                setTimeout(() => {
+if (fireworksActive) {
+                        for (let i = 0; i < 6; i++) {
+                            const rocket = new FireworkRocket(w, h);
+                            rocket.targetY = Math.random() * h * 0.35 + h * 0.06;
+                            rocket.y = h + Math.random() * 50;
+                            fireworks.push(rocket);
+                        }
+                    }
+                }, 2500);
+                setTimeout(() => {
+                    if (fireworksActive) {
+                        for (let i = 0; i < 5; i++) {
+                            const rocket = new FireworkRocket(w, h);
+                            rocket.targetY = Math.random() * h * 0.3 + h * 0.08;
+                            rocket.y = h + Math.random() * 30;
+                            fireworks.push(rocket);
+                        }
+                    }
+                }, 4000);
+            }
+
+            // ==================== LOADING SEQUENCE ====================
+            function showTerminalLines() {
+                const lines = document.querySelectorAll('.terminal-line[data-delay]');
+                lines.forEach((line) => {
+                    const delay = parseInt(line.getAttribute('data-delay'));
+                    setTimeout(() => {
+                        line.classList.add('visible');
+                    }, delay);
+                });
+            }
+
+            function animateProgressBar() {
+                progressFill.style.width = '0%';
+                // Animate progress over ~2.5 seconds
+                const startTime = performance.now();
+                const duration = 2500;
+
+                function updateProgress(ts) {
+                    const elapsed = ts - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    // Ease in-out
+                    const eased = progress < 0.5 ?
+                        2 * progress * progress :
+                        -1 + (4 - 2 * progress) * progress;
+                    progressFill.style.width = (eased * 100) + '%';
+                    if (progress < 1) {
+                        requestAnimationFrame(updateProgress);
+                    } else {
+                        progressFill.style.width = '100%';
+                        // Show ready line and button
+                        setTimeout(() => {
+                            const readyLine = document.getElementById('readyLine');
+                            if (readyLine) readyLine.classList.add('visible');
+                            openBtnContainer.classList.add('visible');
+                        }, 200);
+                    }
+                }
+                requestAnimationFrame(updateProgress);
+            }
+
+            function startLoadingSequence() {
+                // Disable ship button
+                shipBtn.classList.add('loading-active');
+                shipBtn.style.pointerEvents = 'none';
+
+                // Show overlay
+                loadingOverlay.classList.add('active');
+
+                // Reset terminal lines
+                document.querySelectorAll('.terminal-line[data-delay]').forEach(l => l.classList.remove(
+                    'visible'));
+                const readyLine = document.getElementById('readyLine');
+                if (readyLine) readyLine.classList.remove('visible');
+                openBtnContainer.classList.remove('visible');
+                progressFill.style.width = '0%';
+
+                // Start animations
+                setTimeout(() => {
+                    showTerminalLines();
+                    animateProgressBar();
+                }, 300);
+            }
+
+            // ==================== EVENT HANDLERS ====================
+            shipBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Initialize audio on first interaction
+                if (!isAudioStarted) {
+                    initAudio();
+                }
+                startLoadingSequence();
+});
+
+            // Also allow touch events for mobile
+            shipBtn.addEventListener('touchend', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                if (!isAudioStarted) {
+                    initAudio();
+                }
+                startLoadingSequence();
+            });
+
+            openBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                transitionToPage2();
+            });
+
+            openBtn.addEventListener('touchend', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                transitionToPage2();
+            });
+
+            function transitionToPage2() {
+                // Hide loading overlay
+                loadingOverlay.classList.remove('active');
+
+                // Fade out page 1
+                page1.classList.remove('page-visible');
+                page1.classList.add('page-hidden');
+
+                // Show page 2
+                page2.classList.remove('page-hidden');
+                page2.classList.add('page-visible');
+
+                // Start fireworks
+                startFireworks();
+
+                // Show birthday message after delay
+                setTimeout(() => {
+                    birthdayMsg.classList.add('visible');
+                }, 400);
+
+                // Spawn sparkle particles
+                spawnSparkles();
+
+                // Keep audio but let it fade slightly for the celebration
+                if (audioCtx && ambientGain && isAudioStarted) {
+                    ambientGain.gain.setTargetAtTime(0.18, audioCtx.currentTime, 3);
+                }
+
+                // Reset ship state for potential revisit
+                setTimeout(() => {
+                    shipBtn.classList.remove('loading-active');
+                    shipBtn.style.pointerEvents = 'auto';
+                    progressFill.style.width = '0%';
+                    document.querySelectorAll('.terminal-line[data-delay]').forEach(l => l.classList
+                        .remove('visible'));
+                    const readyLine = document.getElementById('readyLine');
+                    if (readyLine) readyLine.classList.remove('visible');
+                    openBtnContainer.classList.remove('visible');
+                }, 1500);
+            }
+
+            function spawnSparkles() {
+                const count = 40;
+                for (let i = 0; i < count; i++) {
+                    setTimeout(() => {
+                        const sparkle = document.createElement('div');
+                        sparkle.classList.add('sparkle');
+                        sparkle.style.left = Math.random() * 90 + '%';
+                        sparkle.style.top = Math.random() * 60 + 30 + '%';
+                        sparkle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                        sparkle.style.width = (Math.random() * 5 + 2) + 'px';
+                        sparkle.style.height = sparkle.style.width;
+                        document.body.appendChild(sparkle);
+                        setTimeout(() => {
+                            if (sparkle.parentNode) sparkle.parentNode.removeChild(sparkle);
+                        }, 3000);
+                    }, i * 30);
+                }
+            }
+
+            // ==================== KEYBOARD SHORTCUT (for testing) ====================
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && page1.classList.contains('page-visible') && !loadingOverlay
+                    .classList.contains('active')) {
+                    if (!isAudioStarted) initAudio();
+                    startLoadingSequence();
+                }
+            });
+
+            // ==================== INITIAL SETUP ====================
+            // Ensure page 1 is visible, page 2 hidden
+            page1.classList.add('page-visible');
+            page1.classList.remove('page-hidden');
+            page2.classList.add('page-hidden');
+page2.classList.remove('page-visible');
+            loadingOverlay.classList.remove('active');
+            openBtnContainer.classList.remove('visible');
+            birthdayMsg.classList.remove('visible');
+
+            // Start wave animation
+            if (waveAnimationId) cancelAnimationFrame(waveAnimationId);
+            waveAnimationId = requestAnimationFrame(drawWaves);
+
+            // Start firework canvas rendering (idle until activated)
+            if (fireworkAnimationId) cancelAnimationFrame(fireworkAnimationId);
+            fireworkAnimationId = requestAnimationFrame(drawFireworks);
+
+            console.log('🚢 Di.Nic v. 3.5 — Готово к плаванию!');
+            console.log('   Нажмите на корабль, чтобы начать.');
+
+            // ==================== HANDLE WINDOW RESIZE FOR ALL CANVASES ====================
+            window.addEventListener('resize', () => {
+                resizeWaveCanvas();
+                resizeFireworkCanvas();
+                seedFoamParticles();
+            });
+
+            // ==================== CLEANUP (not strictly necessary but good practice) ====================
+            // The page is expected to stay open; no cleanup needed for a greeting card.
+
+        })();
+    </script>
+</body>
+</html>
