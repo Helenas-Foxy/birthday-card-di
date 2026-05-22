@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Хогвартс-35 — Поздравительная открытка</title>
+    <style>
+        :root {
+            --parchment: #f4e4c1;
+            --parchment-dark: #d4b896;
+            --gold: #d4a843;
+            --gold-light: #f0d068;
+            --brick: #5c3a2e;
+            --brick-dark: #3a1f14;
+            --night: #0a0a14;
+            --night-blue: #0d1025;
+            --magic-glow: #a8d8ea;
+            --scroll-wood: #6b3a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: var(--night);
+            cursor: default;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            position: relative;
+        }
+
+        /* ============ ФОН: Кирпичная стена + атмосфера ============ */
+        .background-scene {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                /* Кирпичная текстура */
+                repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 38px,
+                    rgba(0, 0, 0, 0.35) 38px,
+                    rgba(0, 0, 0, 0.35) 40px),
+                repeating-linear-gradient(90deg,
+                    transparent,
+                    transparent 58px,
+                    rgba(0, 0, 0, 0.25) 58px,
+                    rgba(0, 0, 0, 0.25) 60px),
+                /* Глубокий тёмный фон */
+                radial-gradient(ellipse at 50% 40%, #1a1020 0%, #0a0612 50%, #050510 100%);
+            background-color: #1a0e14;
+        }
+
+        /* Звёзды / магические искры */
+        .stars-container {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--dur) ease-in-out infinite;
+            animation-delay: var(--delay);
+            opacity: 0;
+            box-shadow: 0 0 var(--glow) 1px rgba(255, 255, 240, 0.9);
+        }
+        @keyframes twinkle {
+            0%,
+            100% {
+                opacity: 0.15;
+                transform: scale(1);
+            }
+            30% {
+                opacity: 0.9;
+                transform: scale(1.8);
+            }
+            60% {
+                opacity: 0.2;
+                transform: scale(0.7);
+            }
+            85% {
+                opacity: 0.7;
+                transform: scale(1.5);
+            }
+        }
+
+        /* Платформа 9¾ — знак */
+        .platform-sign {
+            position: fixed;
+            z-index: 2;
+            left: 8%;
+            top: 18%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .platform-pillar {
+            width: 50px;
+            height: 180px;
+            background: linear-gradient(180deg, #6b3a2a 0%, #4a2215 40%, #5c3020 60%, #3a1a10 100%);
+            border-radius: 8px 8px 0 0;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.7), inset 2px 0 8px rgba(255, 255, 255, 0.05);
+            position: relative;
+            border: 2px solid #3a1a10;
+        }
+        .platform-sign-board {
+            background: #2c1810;
+            color: #f0d068;
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px #f0d068, 0 0 40px #d4a843;
+            border: 3px solid #5c3a2e;
+            box-shadow: 0 0 30px rgba(212, 168, 67, 0.4);
+            white-space: nowrap;
+font-family: 'Georgia', 'Times New Roman', serif;
+        }
+        .platform-sign-board span {
+            font-size: 1.1rem;
+            vertical-align: super;
+            margin-left: 2px;
+        }
+
+        /* Хогвартс-экспресс */
+        .train-container {
+            position: fixed;
+            z-index: 2;
+            right: -30px;
+            bottom: 12%;
+            pointer-events: none;
+            animation: trainSteam 3s ease-in-out infinite;
+        }
+        @keyframes trainSteam {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+        .train-body {
+            width: 220px;
+            height: 80px;
+            background: linear-gradient(180deg, #8b1a1a 0%, #5c0e0e 50%, #3d0808 100%);
+            border-radius: 12px 12px 6px 6px;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), inset 0 2px 0 rgba(255, 200, 150, 0.2);
+            border: 3px solid #2a0505;
+        }
+        .train-chimney {
+            position: absolute;
+            top: -35px;
+            left: 30px;
+            width: 28px;
+            height: 40px;
+            background: linear-gradient(180deg, #3a1a10 0%, #1a0805 100%);
+            border-radius: 6px 6px 0 0;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.5);
+        }
+        .train-window {
+            position: absolute;
+            top: 16px;
+            width: 26px;
+            height: 28px;
+            background: #fce8b0;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #fce8b0, 0 0 30px rgba(252, 232, 176, 0.6);
+            border: 3px solid #3a1a10;
+        }
+        .train-window:nth-child(2) {
+            left: 50px;
+        }
+        .train-window:nth-child(3) {
+            left: 90px;
+        }
+        .train-window:nth-child(4) {
+            left: 130px;
+        }
+        .train-window:nth-child(5) {
+            left: 168px;
+        }
+        .steam-particle {
+            position: absolute;
+            top: -50px;
+            left: 25px;
+            width: 18px;
+            height: 18px;
+            background: rgba(200, 200, 210, 0.7);
+            border-radius: 50%;
+            animation: steamRise 2.5s ease-out infinite;
+            box-shadow: 0 0 12px rgba(200, 200, 220, 0.5);
+        }
+        .steam-particle:nth-child(7) {
+            animation-delay: 0s;
+        }
+        .steam-particle:nth-child(8) {
+            animation-delay: 0.6s;
+            left: 32px;
+        }
+        .steam-particle:nth-child(9) {
+            animation-delay: 1.2s;
+            left: 20px;
+        }
+        .steam-particle:nth-child(10) {
+            animation-delay: 1.8s;
+            left: 36px;
+        }
+        @keyframes steamRise {
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-60px) translateX(15px) scale(2.5);
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-130px) translateX(30px) scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* ============ ПАРЯЩИЕ ЭЛЕМЕНТЫ ============ */
+        .floating-element {
+            position: fixed;
+            z-index: 4;
+            pointer-events: none;
+            font-size: 2.8rem;
+            filter: drop-shadow(0 0 12px rgba(212, 168, 67, 0.7));
+            animation: floatAround var(--dur) ease-in-out infinite;
+            animation-delay: var(--delay);
+            opacity: 0.85;
+            transition: filter 0.5s;
+        }
+        .floating-element.snitch {
+            font-size: 2.2rem;
+            animation-name: floatSnitch;
+        }
+        .floating-element.broom {
+            font-size: 3rem;
+            animation-name: floatBroom;
+        }
+        .floating-element.lightning {
+            font-size: 2.6rem;
+animation-name: floatLightning;
+            filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 30px rgba(255, 200, 50, 0.6));
+        }
+        .floating-element.hat {
+            font-size: 2.5rem;
+            animation-name: floatHat;
+        }
+        .floating-element.crest {
+            font-size: 2.4rem;
+            animation-name: floatCrest;
+        }
+        .floating-element.wand {
+            font-size: 2.6rem;
+            animation-name: floatWand;
+            filter: drop-shadow(0 0 15px rgba(180, 220, 255, 0.8));
+        }
+        .floating-element.hallows {
+            animation-name: floatHallows;
+        }
+
+        @keyframes floatSnitch {
+            0%,
+            100% {
+                top: 15%;
+                left: 10%;
+                transform: rotate(0deg) translateY(0);
+            }
+            25% {
+                top: 8%;
+                left: 22%;
+                transform: rotate(90deg) translateY(-20px);
+            }
+            50% {
+                top: 18%;
+                left: 30%;
+                transform: rotate(180deg) translateY(10px);
+            }
+            75% {
+                top: 10%;
+                left: 16%;
+                transform: rotate(270deg) translateY(-25px);
+            }
+        }
+        @keyframes floatBroom {
+            0%,
+            100% {
+                top: 65%;
+                left: 75%;
+                transform: rotate(-15deg) translateY(0);
+            }
+            30% {
+                top: 55%;
+                left: 82%;
+                transform: rotate(-5deg) translateY(-30px);
+            }
+            60% {
+                top: 72%;
+                left: 70%;
+                transform: rotate(-25deg) translateY(15px);
+            }
+            85% {
+                top: 58%;
+                left: 78%;
+                transform: rotate(-10deg) translateY(-20px);
+            }
+        }
+        @keyframes floatLightning {
+            0%,
+            100% {
+                top: 20%;
+                left: 78%;
+                transform: scale(1) rotate(0deg);
+            }
+            20% {
+                top: 12%;
+                left: 72%;
+                transform: scale(1.3) rotate(10deg);
+            }
+            40% {
+                top: 25%;
+                left: 84%;
+                transform: scale(0.8) rotate(-8deg);
+            }
+            60% {
+                top: 14%;
+                left: 68%;
+                transform: scale(1.4) rotate(5deg);
+            }
+            80% {
+                top: 22%;
+                left: 80%;
+                transform: scale(0.9) rotate(-3deg);
+            }
+        }
+        @keyframes floatHat {
+            0%,
+            100% {
+                top: 70%;
+                left: 12%;
+                transform: rotate(0deg) translateY(0);
+            }
+            33% {
+                top: 60%;
+                left: 20%;
+                transform: rotate(15deg) translateY(-18px);
+            }
+            66% {
+                top: 75%;
+                left: 8%;
+                transform: rotate(-10deg) translateY(10px);
+            }
+        }
+        @keyframes floatCrest {
+            0%,
+            100% {
+                top: 25%;
+                left: 60%;
+                transform: scale(1) rotate(0deg);
+            }
+            40% {
+                top: 18%;
+                left: 55%;
+                transform: scale(1.15) rotate(8deg);
+            }
+            70% {
+                top: 30%;
+                left: 65%;
+                transform: scale(0.9) rotate(-5deg);
+            }
+        }
+        @keyframes floatWand {
+            0%,
+            100% {
+                top: 55%;
+                left: 20%;
+                transform: rotate(-30deg) translateY(0);
+            }
+            30% {
+                top: 48%;
+                left: 28%;
+                transform: rotate(-15deg) translateY(-15px);
+            }
+            65% {
+top: 60%;
+                left: 14%;
+                transform: rotate(-40deg) translateY(12px);
+            }
+        }
+        @keyframes floatHallows {
+            0%,
+            100% {
+                top: 40%;
+                left: 82%;
+                transform: rotate(0deg) translateY(0);
+                opacity: 0.7;
+            }
+            25% {
+                top: 32%;
+                left: 76%;
+                transform: rotate(20deg) translateY(-22px);
+                opacity: 1;
+            }
+            50% {
+                top: 45%;
+                left: 86%;
+                transform: rotate(-15deg) translateY(8px);
+                opacity: 0.6;
+            }
+            75% {
+                top: 35%;
+                left: 80%;
+                transform: rotate(10deg) translateY(-18px);
+                opacity: 0.9;
+            }
+        }
+
+        /* Знак Даров Смерти — SVG */
+        .hallows-svg {
+            width: 48px;
+            height: 48px;
+        }
+        .hallows-svg polygon {
+            fill: none;
+            stroke: #d4a843;
+            stroke-width: 2.5;
+            filter: drop-shadow(0 0 8px rgba(212, 168, 67, 0.8));
+        }
+        .hallows-svg circle {
+            fill: none;
+            stroke: #d4a843;
+            stroke-width: 2.5;
+            filter: drop-shadow(0 0 8px rgba(212, 168, 67, 0.8));
+        }
+        .hallows-svg line {
+            stroke: #d4a843;
+            stroke-width: 2.5;
+            filter: drop-shadow(0 0 8px rgba(212, 168, 67, 0.8));
+        }
+
+        /* ============ СОВА В ЦЕНТРЕ ============ */
+        .owl-container {
+            position: fixed;
+            z-index: 10;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            animation: owlBob 3s ease-in-out infinite;
+            transition: filter 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+        .owl-container:hover {
+            filter: drop-shadow(0 0 30px rgba(255, 220, 150, 0.9)) drop-shadow(0 0 60px rgba(255, 200, 100, 0.6));
+            animation: owlBobHover 0.8s ease-in-out infinite;
+        }
+        .owl-container:active {
+            transform: translate(-50%, -50%) scale(0.93);
+            transition: transform 0.1s;
+        }
+        @keyframes owlBob {
+            0%,
+            100% {
+                transform: translate(-50%, -50%) translateY(0);
+            }
+            40% {
+                transform: translate(-50%, -50%) translateY(-14px);
+            }
+            70% {
+                transform: translate(-50%, -50%) translateY(-4px);
+            }
+        }
+        @keyframes owlBobHover {
+            0%,
+            100% {
+                transform: translate(-50%, -50%) translateY(0);
+            }
+            50% {
+                transform: translate(-50%, -50%) translateY(-10px);
+            }
+        }
+        .owl-emoji {
+            font-size: 130px;
+            display: block;
+            line-height: 1;
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+            transition: transform 0.3s;
+        }
+        .owl-letter {
+            position: relative;
+            margin-top: -18px;
+            z-index: 11;
+            background: #fdf5e6;
+            border: 3px solid #c9a96e;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            color: #5c3a2e;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 0 8px rgba(139, 100, 60, 0.3);
+            letter-spacing: 1px;
+            font-weight: bold;
+            animation: letterWiggle 2s ease-in-out infinite;
+            white-space: nowrap;
+            font-family: 'Georgia', serif;
+        }
+        .owl-letter::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid #c9a96e;
+        }
+        @keyframes letterWiggle {
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(2deg);
+            }
+            75% {
+                transform: rotate(-2deg);
+            }
+        }
+        .owl-hint {
+            position: absolute;
+            bottom: -55px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #f0d068;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            animation: hintPulse 2s ease-in-out infinite;
+            white-space: nowrap;
+            text-shadow: 0 0 12px rgba(240, 208, 104, 0.6);
+            font-family: 'Georgia', serif;
+        }
+        @keyframes hintPulse {
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* ============ МОДАЛЬНОЕ ОКНО — СВИТОК ============ */
+        .modal-overlay {
+            position: fixed;
+            z-index: 100;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .scroll-wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 620px;
+            transform: scaleY(0);
+            transform-origin: center center;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            perspective: 1000px;
+        }
+        .modal-overlay.active .scroll-wrapper {
+            transform: scaleY(1);
+        }
+
+        .scroll-parchment {
+            background: linear-gradient(180deg,
+                    #f7e8c8 0%, #f4e0b8 3%, #fdf4e0 8%, #f5e4c0 30%, #fdf5e6 50%, #f4e0b8 70%, #fdf4e0 92%, #f4e0b8 97%, #e8d5a8 100%);
+            border-radius: 8px;
+            padding: 40px 35px 35px;
+            position: relative;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.7),
+                0 0 0 6px #c9a96e,
+                0 0 0 10px #8b5e3c,
+                0 0 0 14px #c9a96e,
+                inset 0 0 40px rgba(139, 100, 60, 0.15);
+            border: 2px solid #b8945a;
+            overflow: hidden;
+        }
+        /* Верхний и нижний деревянные валики */
+        .scroll-parchment::before,
+        .scroll-parchment::after {
+            content: '';
+            position: absolute;
+            left: -8px;
+            right: -8px;
+            height: 22px;
+            background: linear-gradient(180deg, #6b3a2a, #8b5a3c, #5c2818);
+            border-radius: 11px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+        .scroll-parchment::before {
+            top: -2px;
+        }
+        .scroll-parchment::after {
+            bottom: -2px;
+        }
+        /* Декоративная печать */
+        .wax-seal {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 40% 35%, #c41e3a, #7a1022);
+            border-radius: 50%;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.5), inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #f0d068;
+            text-shadow: 0 0 6px #f0d068;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        .scroll-close-btn {
+            position: absolute;
+            top: 18px;
+right: 22px;
+            z-index: 10;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #5c3a2e;
+            transition: all 0.3s;
+            line-height: 1;
+            padding: 6px 10px;
+            border-radius: 50%;
+            font-family: serif;
+        }
+        .scroll-close-btn:hover {
+            color: #c41e3a;
+            transform: rotate(90deg);
+            text-shadow: 0 0 10px rgba(196, 30, 58, 0.6);
+        }
+        .scroll-content {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            color: #3a1a0a;
+            font-size: 1.25rem;
+            line-height: 1.9;
+            letter-spacing: 0.5px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .scroll-content .revealed-text {
+            display: inline;
+        }
+        .scroll-content .cursor-blink {
+            display: inline-block;
+            width: 3px;
+            height: 1.3em;
+            background: #3a1a0a;
+            margin-left: 2px;
+            animation: blink 0.7s step-end infinite;
+            vertical-align: text-bottom;
+        }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+        .scroll-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #5c1a0a;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ============ КНОПКА МУЗЫКИ ============ */
+        .music-toggle {
+            position: fixed;
+            z-index: 50;
+            bottom: 25px;
+            right: 25px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(30, 15, 10, 0.8);
+            border: 2px solid #d4a843;
+            color: #f0d068;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(212, 168, 67, 0.3);
+        }
+        .music-toggle:hover {
+            background: rgba(50, 25, 15, 0.9);
+            box-shadow: 0 0 25px rgba(212, 168, 67, 0.6);
+            transform: scale(1.08);
+        }
+        .music-toggle.playing {
+            animation: musicPulse 1.5s ease-in-out infinite;
+        }
+        @keyframes musicPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 15px rgba(212, 168, 67, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(240, 208, 104, 0.7);
+            }
+        }
+
+        /* ============ АДАПТИВ ============ */
+        @media (max-width: 768px) {
+            .owl-emoji {
+                font-size: 90px;
+            }
+            .owl-letter {
+                font-size: 0.65rem;
+                padding: 6px 12px;
+            }
+            .owl-hint {
+                font-size: 0.7rem;
+                bottom: -42px;
+            }
+            .floating-element {
+                font-size: 1.8rem;
+            }
+            .floating-element.snitch {
+                font-size: 1.5rem;
+            }
+            .floating-element.broom {
+                font-size: 2rem;
+            }
+            .floating-element.lightning {
+                font-size: 1.7rem;
+            }
+            .floating-element.hat {
+                font-size: 1.6rem;
+            }
+            .floating-element.crest {
+                font-size: 1.5rem;
+            }
+            .floating-element.wand {
+                font-size: 1.7rem;
+            }
+            .hallows-svg {
+                width: 34px;
+height: 34px;
+            }
+            .scroll-parchment {
+                padding: 30px 20px 25px;
+            }
+            .scroll-content {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+            .scroll-title {
+                font-size: 1.3rem;
+            }
+            .platform-sign-board {
+                font-size: 1.1rem;
+                padding: 6px 14px;
+            }
+            .platform-pillar {
+                width: 35px;
+                height: 120px;
+            }
+            .train-body {
+                width: 140px;
+                height: 55px;
+            }
+            .train-chimney {
+                width: 20px;
+                height: 28px;
+                top: -25px;
+                left: 20px;
+            }
+            .train-window {
+                width: 18px;
+                height: 20px;
+                top: 10px;
+            }
+            .train-window:nth-child(2) {
+                left: 32px;
+            }
+            .train-window:nth-child(3) {
+                left: 56px;
+            }
+            .train-window:nth-child(4) {
+                left: 80px;
+            }
+            .train-window:nth-child(5) {
+                left: 104px;
+            }
+        }
+        @media (max-width: 480px) {
+            .owl-emoji {
+                font-size: 70px;
+            }
+            .owl-letter {
+                font-size: 0.55rem;
+                padding: 4px 8px;
+                margin-top: -10px;
+            }
+            .owl-hint {
+                font-size: 0.6rem;
+                bottom: -35px;
+            }
+            .floating-element {
+                font-size: 1.3rem;
+            }
+            .floating-element.snitch {
+                font-size: 1.1rem;
+            }
+            .floating-element.broom {
+                font-size: 1.4rem;
+            }
+            .scroll-parchment {
+                padding: 25px 15px 20px;
+            }
+            .scroll-content {
+                font-size: 0.85rem;
+            }
+            .scroll-title {
+                font-size: 1.1rem;
+            }
+            .platform-sign {
+                left: 3%;
+                top: 10%;
+            }
+            .platform-sign-board {
+                font-size: 0.85rem;
+                padding: 4px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ============ ФОН ============ -->
+    <div class="background-scene"></div>
+    <div class="stars-container" id="starsContainer"></div>
+
+    <!-- ============ ПЛАТФОРМА 9¾ ============ -->
+    <div class="platform-sign">
+        <div class="platform-sign-board">Платформа 9<span>¾</span></div>
+        <div class="platform-pillar"></div>
+    </div>
+
+    <!-- ============ ХОГВАРТС-ЭКСПРЕСС ============ -->
+    <div class="train-container">
+        <div class="train-body">
+            <div class="train-chimney"></div>
+            <div class="train-window"></div>
+            <div class="train-window"></div>
+            <div class="train-window"></div>
+            <div class="train-window"></div>
+            <div class="train-window"></div>
+        </div>
+        <div class="steam-particle"></div>
+        <div class="steam-particle"></div>
+        <div class="steam-particle"></div>
+        <div class="steam-particle"></div>
+    </div>
+
+    <!-- ============ ПАРЯЩИЕ ЭЛЕМЕНТЫ ============ -->
+    <!-- Золотой снитч -->
+    <div class="floating-element snitch" style="--dur:9s;--delay:0s;" title="Золотой снитч">🏐✨</div>
+
+    <!-- Метла Нимбус-2000 -->
+    <div class="floating-element broom" style="--dur:11s;--delay:1.5s;" title="Нимбус-2000">🧹</div>
+
+    <!-- Молния -->
+    <div class="floating-element lightning" style="--dur:7s;--delay:0.8s;" title="Молния">⚡</div>
+
+    <!-- Распределяющая шляпа -->
+    <div class="floating-element hat" style="--dur:13s;--delay:3s;" title="Распределяющая шляпа">🎩</div>
+
+    <!-- Герб Хогвартса -->
+<div class="floating-element crest" style="--dur:10s;--delay:2s;" title="Герб Хогвартса">🛡️🏰</div>
+
+    <!-- Волшебная палочка -->
+    <div class="floating-element wand" style="--dur:8s;--delay:1s;" title="Волшебная палочка">🪄</div>
+
+    <!-- Знак Даров Смерти -->
+    <div class="floating-element hallows" style="--dur:12s;--delay:2.5s;" title="Дары Смерти">
+        <svg class="hallows-svg" viewBox="0 0 48 48">
+            <polygon points="24,4 4,42 44,42" />
+            <circle cx="24" cy="28" r="8" />
+            <line x1="24" y1="10" x2="24" y2="40" />
+        </svg>
+    </div>
+
+    <!-- ============ СОВА С ПИСЬМОМ ============ -->
+    <div class="owl-container" id="owlContainer" title="Нажми, чтобы открыть письмо">
+        <span class="owl-emoji">🦉</span>
+        <div class="owl-letter">📨 Письмо из Хогвартса</div>
+        <div class="owl-hint">✨ Нажми на сову ✨</div>
+    </div>
+
+    <!-- ============ МОДАЛЬНОЕ ОКНО — СВИТОК ============ -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="scroll-wrapper" id="scrollWrapper">
+            <div class="scroll-parchment">
+                <button class="scroll-close-btn" id="scrollCloseBtn" title="Закрыть">✕</button>
+                <div class="scroll-title">🎓 Хогвартс-35</div>
+                <div class="scroll-content" id="scrollContent">
+                    <!-- Текст будет появляться здесь побуквенно -->
+                </div>
+                <div class="wax-seal">H</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ КНОПКА МУЗЫКИ ============ -->
+    <button class="music-toggle playing" id="musicToggle" title="Вкл/Выкл музыку">🎵</button>
+
+    <script>
+        (function() {
+            // ============ ГЕНЕРАЦИЯ ЗВЁЗД ============
+            const starsContainer = document.getElementById('starsContainer');
+            const starCount = 80;
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                const size = Math.random() * 3.5 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--dur', (Math.random() * 4 + 2) + 's');
+                star.style.setProperty('--delay', (Math.random() * 5) + 's');
+                star.style.setProperty('--glow', (Math.random() * 6 + 2) + 'px');
+                starsContainer.appendChild(star);
+            }
+
+            // ============ АУДИО: Упрощённая Hedwig's Theme ============
+            let audioCtx = null;
+            let isMusicPlaying = false;
+            let musicLoopTimeout = null;
+            let musicGainNode = null;
+
+            const melodyNotes = [
+                // Частота (Гц), длительность (сек), пауза после (сек)
+                [493.88, 0.18, 0.04], // B4
+                [659.25, 0.18, 0.04], // E5
+                [783.99, 0.35, 0.06], // G5
+                [739.99, 0.16, 0.03], // F#5
+                [659.25, 0.40, 0.06], // E5
+                [987.77, 0.20, 0.04], // B5
+                [880.00, 0.38, 0.06], // A5
+                [739.99, 0.22, 0.04], // F#5
+                [659.25, 0.18, 0.03], // E5
+                [783.99, 0.30, 0.05], // G5
+                [739.99, 0.16, 0.03], // F#5
+                [622.25, 0.28, 0.05], // D#5/Eb5
+                [739.99, 0.20, 0.04], // F#5
+                [493.88, 0.50, 0.15], // B4 (завершающая)
+            ];
+
+            function createBellSound(frequency, duration, startTime) {
+                if (!audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                const filter = audioCtx.createBiquadFilter();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(frequency, startTime);
+osc.frequency.exponentialRampToValueAtTime(frequency * 0.99, startTime + duration);
+
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(frequency * 3, startTime);
+                filter.frequency.exponentialRampToValueAtTime(frequency * 1.2, startTime + duration);
+                filter.Q.setValueAtTime(2, startTime);
+
+                gain.gain.setValueAtTime(0, startTime);
+                gain.gain.linearRampToValueAtTime(0.35, startTime + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.25, startTime + duration * 0.4);
+                gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+                gain.gain.setValueAtTime(0, startTime + duration + 0.01);
+
+                if (musicGainNode) {
+                    gain.connect(musicGainNode);
+                } else {
+                    gain.connect(audioCtx.destination);
+                }
+                filter.connect(gain);
+                osc.connect(filter);
+
+                osc.start(startTime);
+                osc.stop(startTime + duration + 0.05);
+            }
+
+            function playMelodySequence() {
+                if (!isMusicPlaying || !audioCtx) return;
+                const now = audioCtx.currentTime;
+                let timeOffset = now + 0.05;
+
+                melodyNotes.forEach(([freq, dur, pause]) => {
+                    createBellSound(freq, dur, timeOffset);
+                    timeOffset += dur + pause;
+                });
+
+                // Зацикливаем
+                const totalDuration = melodyNotes.reduce((sum, [, d, p]) => sum + d + p, 0);
+                musicLoopTimeout = setTimeout(playMelodySequence, totalDuration * 1000 - 50);
+            }
+
+            function initAudioContext() {
+                if (!audioCtx) {
+                    try {
+                        audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                        musicGainNode = audioCtx.createGain();
+                        musicGainNode.gain.setValueAtTime(0.7, audioCtx.currentTime);
+                        musicGainNode.connect(audioCtx.destination);
+                    } catch (e) {
+                        console.warn('Web Audio API не поддерживается');
+                        return false;
+                    }
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                return true;
+            }
+
+            function startMusic() {
+                if (!initAudioContext()) return;
+                if (isMusicPlaying) return;
+                isMusicPlaying = true;
+                document.getElementById('musicToggle').classList.add('playing');
+                document.getElementById('musicToggle').textContent = '🎵';
+                playMelodySequence();
+            }
+
+            function stopMusic() {
+                isMusicPlaying = false;
+                document.getElementById('musicToggle').classList.remove('playing');
+                document.getElementById('musicToggle').textContent = '🔇';
+                if (musicLoopTimeout) {
+                    clearTimeout(musicLoopTimeout);
+                    musicLoopTimeout = null;
+                }
+            }
+
+            function toggleMusic() {
+                if (isMusicPlaying) {
+                    stopMusic();
+                } else {
+                    startMusic();
+                }
+            }
+
+            // Кнопка музыки
+            document.getElementById('musicToggle').addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleMusic();
+            });
+
+            // Попытка автозапуска при загрузке
+            function attemptAutoplay() {
+                if (initAudioContext()) {
+                    startMusic();
+                }
+            }
+
+            // Запускаем музыку при первом взаимодействии (обходим ограничения браузера)
+            let autoplayAttempted = false;
+function tryAutoplayOnInteraction() {
+                if (!autoplayAttempted) {
+                    autoplayAttempted = true;
+                    attemptAutoplay();
+                }
+            }
+
+            // Пытаемся сразу
+            window.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => {
+                    attemptAutoplay();
+                    autoplayAttempted = true;
+                }, 300);
+            });
+
+            // Если автозапуск заблокирован — запустим при первом клике
+            document.addEventListener('click', tryAutoplayOnInteraction, { once: false });
+            document.addEventListener('touchstart', tryAutoplayOnInteraction, { once: false });
+            document.addEventListener('keydown', tryAutoplayOnInteraction, { once: false });
+
+            // ============ СОВА И СВИТОК ============
+            const owlContainer = document.getElementById('owlContainer');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const scrollWrapper = document.getElementById('scrollWrapper');
+            const scrollContent = document.getElementById('scrollContent');
+            const scrollCloseBtn = document.getElementById('scrollCloseBtn');
+
+            const letterText =
+                'Дорогая Диана, Вы зачислены в школу «Хогвартс-35»! В нашей школе Вас ждёт увлекательная жизнь!';
+
+            let isRevealing = false;
+            let revealTimeout = null;
+            let revealedChars = 0;
+
+            function openScroll() {
+                if (isRevealing) return;
+                // Запускаем музыку если ещё не
+                if (!isMusicPlaying) {
+                    startMusic();
+                }
+                modalOverlay.classList.add('active');
+                scrollContent.innerHTML = '';
+                revealedChars = 0;
+                isRevealing = true;
+                revealNextChar();
+            }
+
+            function revealNextChar() {
+                if (!isRevealing) return;
+                if (revealedChars < letterText.length) {
+                    const currentText = letterText.substring(0, revealedChars + 1);
+                    scrollContent.innerHTML =
+                        '<span class="revealed-text">' + escapeHTML(currentText) + '</span>' +
+                        '<span class="cursor-blink"></span>';
+                    revealedChars++;
+                    const delay = Math.random() * 55 + 30; // 30-85ms на букву
+                    revealTimeout = setTimeout(revealNextChar, delay);
+                } else {
+                    // Весь текст показан
+                    scrollContent.innerHTML =
+                        '<span class="revealed-text">' + escapeHTML(letterText) + '</span>';
+                    isRevealing = false;
+                    // Убираем курсор через 2 секунды
+                    setTimeout(() => {
+                        const cursor = scrollContent.querySelector('.cursor-blink');
+                        if (cursor) cursor.remove();
+                    }, 2000);
+                }
+            }
+
+            function escapeHTML(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            function closeScroll() {
+                isRevealing = false;
+                if (revealTimeout) {
+                    clearTimeout(revealTimeout);
+                    revealTimeout = null;
+                }
+                modalOverlay.classList.remove('active');
+                scrollContent.innerHTML = '';
+                revealedChars = 0;
+            }
+
+            owlContainer.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (modalOverlay.classList.contains('active')) {
+                    closeScroll();
+                } else {
+                    openScroll();
+                }
+            });
+
+scrollCloseBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeScroll();
+            });
+
+            // Закрытие по клику на оверлей (вне свитка)
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === modalOverlay) {
+                    closeScroll();
+                }
+            });
+
+            // Закрытие по Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                    closeScroll();
+                }
+            });
+
+            // ============ ЭФФЕКТ ПРИ НАВЕДЕНИИ НА ПАРЯЩИЕ ЭЛЕМЕНТЫ ============
+            document.querySelectorAll('.floating-element').forEach(el => {
+                el.style.pointerEvents = 'none'; // не мешают кликам
+            });
+
+            // ============ МАГИЧЕСКИЕ ЧАСТИЦЫ ПРИ КЛИКЕ ============
+            document.addEventListener('click', function(e) {
+                // Создаём несколько искр в точке клика
+                const sparkCount = 8;
+                for (let i = 0; i < sparkCount; i++) {
+                    const spark = document.createElement('div');
+                    spark.style.cssText = `
+                        position: fixed;
+                        z-index: 200;
+                        pointer-events: none;
+                        width: ${Math.random() * 6 + 3}px;
+                        height: ${Math.random() * 6 + 3}px;
+                        background: #f0d068;
+                        border-radius: 50%;
+                        left: ${e.clientX}px;
+                        top: ${e.clientY}px;
+                        box-shadow: 0 0 ${Math.random() * 8 + 4}px #f0d068;
+                        transition: all ${Math.random() * 0.6 + 0.4}s ease-out;
+                        opacity: 1;
+                    `;
+                    document.body.appendChild(spark);
+
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * 60 + 20;
+                    const dx = Math.cos(angle) * distance;
+                    const dy = Math.sin(angle) * distance;
+
+                    requestAnimationFrame(() => {
+                        spark.style.transform = `translate(${dx}px, ${dy}px) scale(0)`;
+                        spark.style.opacity = '0';
+                    });
+
+                    setTimeout(() => {
+                        spark.remove();
+                    }, 1200);
+                }
+            });
+
+            console.log('🦉✨ Хогвартс-35 приветствует Вас! Нажмите на сову, чтобы открыть письмо.');
+            console.log('🎵 Hedwig\'s Theme играет... (нажмите на страницу, если музыка не запустилась)');
+        })();
+    </script>
+</body>
+</html>
