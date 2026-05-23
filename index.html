@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>С юбилеем! 🎂</title>
     <style>
+        /* ВСЕ ВАШИ СТИЛИ (как в исходном коде) — они полностью сохранены */
         :root {
             --sky: #CCFFFF;
             --sea1: #3399FF;
@@ -547,9 +548,7 @@
         <div class="page2-content">
             <h1>Ди, с юбилеем тебя! 🎉</h1>
             <div class="typewriter" id="typewriterText"></div>
-            <!-- Финальный заголовок "С 35-летием" появится после печати -->
             <h2 class="birthday-title" id="birthdayTitle" style="display: none;">С 35-летием! 🎂💫</h2>
-            <!-- Штурвал внизу -->
             <div class="helm-wrapper">
                 <div class="helm-container" id="helmBtn" title="Покрути штурвал — откроются фото!">
                     <svg class="helm-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -575,11 +574,9 @@
         </div>
     </div>
 
-    <!-- ==================== АУДИО ==================== -->
-    <!-- ⚠️⚠️⚠️ ПОДСТАВИТЬ ПУТЬ К АУДИОТРЕКУ ПЕРВОЙ СТРАНИЦЫ (море, крейсер) ⚠️⚠️⚠️ -->
+    <!-- ==================== АУДИО (только один трек) ==================== -->
     <audio id="audio1" src="images/jig.mp3" loop preload="auto"></audio>
-    <!-- ⚠️⚠️⚠️ ПОДСТАВИТЬ ПУТЬ К АУДИОТРЕКУ ВТОРОЙ СТРАНИЦЫ (поздравление) ⚠️⚠️⚠️ -->
-   
+
     <script>
         (function() {
             // ============ DOM-элементы ============
@@ -598,21 +595,18 @@
             const dolphinsContainer = document.getElementById('dolphins-container');
             const birthdayTitle = document.getElementById('birthdayTitle');
 
-            // Аудио
+            // Аудио (один трек для всей открытки)
             const audio1 = document.getElementById('audio1');
-            const audio2 = document.getElementById('audio2');
 
             // ============ ПЛАВАЮЩИЕ ФОТО (4 шт) ============
-            // ⚠️⚠️⚠️ ПОДСТАВИТЬ ПУТИ К 4 ФОТОГРАФИЯМ (для штурвала) ⚠️⚠️⚠️
             const photoUrls = [
-            "images/i1.jpg",
-            "images/i2.jpg",
-            "images/i3.jpg",
-            "images/i4.jpg"
+                "images/i1.jpg",
+                "images/i2.jpg",
+                "images/i3.jpg",
+                "images/i4.jpg"
             ];
-            let activeFloatingPhotos = []; // храним объекты { img, moveInterval, fadeTimer }
+            let activeFloatingPhotos = [];
 
-            // Очистка всех плавающих фото
             function clearAllFloatingPhotos() {
                 activeFloatingPhotos.forEach(photo => {
                     if (photo.img && photo.img.remove) photo.img.remove();
@@ -622,7 +616,6 @@
                 activeFloatingPhotos = [];
             }
 
-            // Создание одного плавающего фото с движением и отскоками
             function createFloatingPhoto(src, delayMs = 0) {
                 setTimeout(() => {
                     if (!src || src === "") {
@@ -636,7 +629,6 @@
                     img.style.position = 'fixed';
                     img.style.zIndex = '150';
                     
-                    // Начальные координаты (случайные, но не за края)
                     const vw = window.innerWidth;
                     const vh = window.innerHeight;
                     const maxW = Math.min(200, vw * 0.35);
@@ -651,15 +643,11 @@
                     img.style.left = x + 'px';
                     img.style.top = y + 'px';
                     document.body.appendChild(img);
-                    
-                    // Появление с анимацией
                     requestAnimationFrame(() => img.classList.add('show'));
                     
-                    // Движение
                     const moveInterval = setInterval(() => {
                         x += dx;
                         y += dy;
-                        // Отскок от границ экрана
                         const w = img.offsetWidth;
                         const h = img.offsetHeight;
                         if (x <= 5) { x = 5; dx = -dx; }
@@ -670,7 +658,6 @@
                         img.style.top = y + 'px';
                     }, 35);
                     
-                    // Автоудаление через 9 секунд
                     const fadeTimer = setTimeout(() => {
                         img.classList.remove('show');
                         setTimeout(() => {
@@ -685,27 +672,22 @@
                 }, delayMs);
             }
             
-            // Последовательный показ 4 фото (поочерёдно)
             let photoSequenceActive = false;
             function showFourPhotosSequentially() {
-                if (photoSequenceActive) {
-                    // если уже идет показ – сначала очистим текущие, потом новый показ
-                    clearAllFloatingPhotos();
-                }
+                if (photoSequenceActive) clearAllFloatingPhotos();
                 photoSequenceActive = true;
                 for (let i = 0; i < photoUrls.length; i++) {
-                    createFloatingPhoto(photoUrls[i], i * 400); // задержка 0.4 сек между фото
+                    createFloatingPhoto(photoUrls[i], i * 400);
                 }
-                // через 10 секунд сбросим флаг (все фото уже удалятся сами)
                 setTimeout(() => { photoSequenceActive = false; }, 10000);
             }
 
-            // ============ ОСТАЛЬНЫЕ ФУНКЦИИ (ДЕЛЬФИНЫ, КОНФЕТТИ, ТЕРМИНАЛ, АУДИО) ============
+            // ============ ДЕЛЬФИНЫ ============
             let dolphinTimers = [];
             function spawnDolphin() {
                 const dolphin = document.createElement('img');
-                // ⚠️⚠️⚠️ ПОДСТАВИТЬ ПУТЬ К ИЗОБРАЖЕНИЮ ДЕЛЬФИНА (image1) ⚠️⚠️⚠️
-                dolphin.src = "";   // например: "images/dolphin.png"
+                // ⚠️ ПОДСТАВИТЬ ПУТЬ К ИЗОБРАЖЕНИЮ ДЕЛЬФИНА (например, "images/dolphin.png")
+                dolphin.src = "";   // если пусто — будет эмодзи
                 dolphin.alt = '🐬';
                 dolphin.className = 'dolphin';
                 dolphin.onerror = function() {
@@ -742,7 +724,7 @@
                 dolphinsContainer.innerHTML = '';
             }
 
-            // Терминал
+            // ============ ТЕРМИНАЛ ============
             let terminalActive = false;
             const terminalItems = [
                 '🎂 Проверка нервной системы',
@@ -783,7 +765,7 @@
             terminalClose.addEventListener('click', closeTerminal);
             terminalOverlay.addEventListener('click', (e) => { if (e.target === terminalOverlay) closeTerminal(); });
 
-            // Конфетти
+            // ============ КОНФЕТТИ ============
             let confettiActive = false;
             let confettiRAF = null;
             let confettiParticles = [];
@@ -849,7 +831,7 @@
                 ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
             }
 
-            // Печатная машинка (без последней фразы, она отдельно)
+            // ============ ПЕЧАТНАЯ МАШИНКА ============
             let typewriterTimer = null;
             const typewriterFullText = `Этот возраст — удивительное время, когда женская красота расцветает в полную силу, соединяясь с мудростью, уверенностью и внутренней гармонией. Ты невероятно красивая, яркая и обаятельная девушка, которая своим появлением способна украсить любой день.
 
@@ -859,7 +841,7 @@
         · Ты — невероятно ответственная, любящая и заботливая мать, отдающая всю душу своему ребенку.
         · Ты — чуткая, внимательная дочь и замечательная, поддерживающая сестра, которая является настоящей гордостью и опорой для всей семьи.
 
-        Желаю тебе, чтобы твоя внутренняя батарейка никогда не разряжалась, а любви и тепла, которые ты так щедро даришь окружающим, возвращалось тебе в стократном размере. Пусть каждый день приносит поводы для улыбок, здоровье будет крепким, а в доме царят уют и гармония. Будь счастлива, любима и оставайся всегда такой же вдохновляющей!`;
+        Желаем тебе, чтобы твоя внутренняя батарейка никогда не разряжалась, а любви и тепла, которые ты так щедро даришь окружающим, возвращалось тебе в стократном размере. Пусть каждый день приносит поводы для улыбок, здоровье будет крепким, а в доме царят уют и гармония. Будь счастлива, любима и оставайся всегда такой же вдохновляющей!`;
             
             function startTypewriter() {
                 typewriterEl.innerHTML = '';
@@ -880,62 +862,67 @@
                     } else {
                         const existingCursor = typewriterEl.querySelector('.cursor');
                         if (existingCursor) existingCursor.remove();
-                        // Показать финальный заголовок
                         birthdayTitle.style.display = 'block';
                     }
                 }
                 typeNext();
             }
 
-            // Аудио
-            function playAudio1() { if (audio1.src && audio1.src !== window.location.href) audio1.play().catch(e=>console.log); }
-            function stopAudio1() { audio1.pause(); audio1.currentTime = 0; }
-            function playAudio2() { if (audio2.src && audio2.src !== window.location.href) audio2.play().catch(e=>console.log); }
-            function stopAudio2() { audio2.pause(); audio2.currentTime = 0; }
+            // ============ АУДИО (один трек) ============
+            function playAudio1() { 
+                if (audio1.src && audio1.src !== window.location.href) {
+                    audio1.play().catch(e => console.log("Автовоспроизведение заблокировано, нужно взаимодействие"));
+                } 
+            }
+            // Никаких stopAudio1 — пусть музыка играет непрерывно
+
             let audio1Started = false;
-            function tryStartAudio1() { if (!audio1Started && audio1.src && audio1.src !== window.location.href) { audio1.play().then(()=>audio1Started=true).catch(()=>{}); } }
-            document.addEventListener('click', function initAudio() { tryStartAudio1(); if (audio1Started) document.removeEventListener('click', initAudio); }, false);
+            function tryStartAudio1() { 
+                if (!audio1Started && audio1.src && audio1.src !== window.location.href) { 
+                    audio1.play().then(() => audio1Started = true).catch(() => {}); 
+                } 
+            }
+            document.addEventListener('click', function initAudio() { 
+                tryStartAudio1(); 
+                if (audio1Started) document.removeEventListener('click', initAudio); 
+            }, false);
             
-            // Переход на страницу 2
+            // ============ ПЕРЕХОД НА СТРАНИЦУ 2 ============
             openPage2Btn.addEventListener('click', function() {
                 closeTerminal();
-                stopAudio1();
+                // Музыку НЕ останавливаем
                 stopDolphins();
                 page1.style.display = 'none';
                 page2.classList.add('active');
-                playAudio2();
                 startTypewriter();
                 startConfetti();
-                // Очищаем фото на случай, если остались
                 clearAllFloatingPhotos();
             });
             
-            // Возврат на главную
+            // ============ ВОЗВРАТ НА ГЛАВНУЮ ============
             backLink.addEventListener('click', function() {
-                stopAudio2();
                 stopConfetti();
-                clearAllFloatingPhotos();   // закрыть все плавающие объекты
+                clearAllFloatingPhotos();
                 if (typewriterTimer) clearTimeout(typewriterTimer);
                 typewriterEl.innerHTML = '';
                 birthdayTitle.style.display = 'none';
                 page2.classList.remove('active');
                 page1.style.display = '';
-                tryStartAudio1();
+                // Музыка продолжает играть, ничего не перезапускаем
                 stopDolphins();
                 startDolphins();
             });
             
-            // Штурвал: при клике показать 4 фото поочерёдно
+            // ============ ШТУРВАЛ ============
             helmBtn.addEventListener('click', showFourPhotosSequentially);
             
-            // Инициализация
+            // ============ ИНИЦИАЛИЗАЦИЯ ============
             function init() {
                 startDolphins();
                 tryStartAudio1();
                 page2.classList.remove('active');
                 page1.style.display = '';
-                // Если пути к фото не заданы, не будет ошибок
-                console.log("⚠️ Проверьте пути: audio1, audio2, dolphin.src, photoUrls[0..3]");
+                console.log("✅ Открытка готова, музыка играет на обеих страницах.");
             }
             document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && terminalActive) closeTerminal(); });
             init();
