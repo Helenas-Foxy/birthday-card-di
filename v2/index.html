@@ -40,17 +40,13 @@
             position: fixed;
             inset: 0;
             z-index: 0;
-            /* ЗАМЕНИТЕ НА ПУТЬ К ФОНОВОМУ ИЗОБРАЖЕНИЮ (платформа 9¾, Хогвартс-экспресс) */
             background-image: url('images/p1.jpg');
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-            /* Если нужен тёмный оттенок поверх фона, можно добавить: */
-            /* background-color: rgba(0, 0, 0, 0.3); */
-            /* background-blend-mode: darken; */
         }
 
-        /* Звёзды / магические искры (остаются для атмосферы) */
+        /* Звёзды / магические искры */
         .stars-container {
             position: fixed;
             inset: 0;
@@ -125,7 +121,8 @@
             vertical-align: super;
             margin-left: 2px;
         }
-/* Хогвартс-экспресс */
+
+        /* Хогвартс-экспресс */
         .train-container {
             position: fixed;
             z-index: 2;
@@ -230,8 +227,8 @@
             position: fixed;
             z-index: 4;
             pointer-events: none;
-            /* Размеры по умолчанию */
-            width: 60px;
+            /* Увеличенный базовый размер */
+            width: 80px;
             height: auto;
             filter: drop-shadow(0 0 12px rgba(212, 168, 67, 0.7));
             animation: floatAround var(--dur) ease-in-out infinite;
@@ -239,35 +236,35 @@
             opacity: 0.85;
             transition: filter 0.5s;
         }
-        /* Индивидуальные размеры для каждого элемента */
+        /* Индивидуальные размеры (увеличены) */
         .floating-element.snitch {
-            width: 45px;
+            width: 70px;
             animation-name: floatSnitch;
         }
         .floating-element.broom {
-            width: 80px;
+            width: 130px;
             animation-name: floatBroom;
         }
         .floating-element.lightning {
-            width: 55px;
+            width: 85px;
             animation-name: floatLightning;
-filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 30px rgba(255, 200, 50, 0.6));
+            filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 30px rgba(255, 200, 50, 0.6));
         }
         .floating-element.hat {
-            width: 65px;
+            width: 100px;
             animation-name: floatHat;
         }
         .floating-element.crest {
-            width: 70px;
+            width: 110px;
             animation-name: floatCrest;
         }
         .floating-element.wand {
-            width: 50px;
+            width: 80px;
             animation-name: floatWand;
             filter: drop-shadow(0 0 15px rgba(180, 220, 255, 0.8));
         }
         .floating-element.hallows {
-            width: 55px;
+            width: 90px;
             animation-name: floatHallows;
         }
         .floating-element img {
@@ -396,7 +393,7 @@ filter: drop-shadow(0 0 18px rgba(255, 215, 0, 0.9)) drop-shadow(0 0 30px rgba(2
             30% {
                 top: 48%;
                 left: 28%;
-transform: rotate(-15deg) translateY(-15px);
+                transform: rotate(-15deg) translateY(-15px);
             }
             65% {
                 top: 60%;
@@ -432,7 +429,7 @@ transform: rotate(-15deg) translateY(-15px);
             }
         }
 
-        /* ============ СОВА В ЦЕНТРЕ (ИЗОБРАЖЕНИЕ) ============ */
+        /* ============ СОВА В ЦЕНТРЕ — СТАБИЛЬНАЯ, БЕЗ ПАРЕНИЯ ============ */
         .owl-container {
             position: fixed;
             z-index: 10;
@@ -440,45 +437,23 @@ transform: rotate(-15deg) translateY(-15px);
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: pointer;
-            animation: owlBob 3s ease-in-out infinite;
-            transition: filter 0.3s;
+            transition: filter 0.3s, transform 0.15s;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 0;
         }
         .owl-container:hover {
-            filter: drop-shadow(0 0 30px rgba(255, 220, 150, 0.9)) drop-shadow(0 0 60px rgba(255, 200, 100, 0.6));
-            animation: owlBobHover 0.8s ease-in-out infinite;
+            filter: drop-shadow(0 0 35px rgba(255, 220, 150, 0.95)) drop-shadow(0 0 65px rgba(255, 200, 100, 0.65));
+            transform: translate(-50%, -50%) scale(1.04);
         }
         .owl-container:active {
-            transform: translate(-50%, -50%) scale(0.93);
+            transform: translate(-50%, -50%) scale(0.94);
             transition: transform 0.1s;
         }
-        @keyframes owlBob {
-            0%,
-            100% {
-                transform: translate(-50%, -50%) translateY(0);
-            }
-            40% {
-                transform: translate(-50%, -50%) translateY(-14px);
-            }
-            70% {
-                transform: translate(-50%, -50%) translateY(-4px);
-            }
-        }
-        @keyframes owlBobHover {
-            0%,
-            100% {
-                transform: translate(-50%, -50%) translateY(0);
-            }
-            50% {
-                transform: translate(-50%, -50%) translateY(-10px);
-            }
-        }
-        /* Изображение совы */
+        /* Изображение совы — увеличенный размер */
         .owl-image {
-            width: 350px;
+            width: 500px;
             height: auto;
             display: block;
             filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
@@ -527,7 +502,7 @@ transform: rotate(-15deg) translateY(-15px);
         }
         .owl-hint {
             position: absolute;
-bottom: -55px;
+            bottom: -55px;
             left: 50%;
             transform: translateX(-50%);
             color: #f0d068;
@@ -655,7 +630,7 @@ bottom: -55px;
         .scroll-content {
             position: relative;
             z-index: 3;
-text-align: center;
+            text-align: center;
             font-family: 'Georgia', 'Times New Roman', serif;
             color: #3a1a0a;
             font-size: 1.25rem;
@@ -738,39 +713,39 @@ text-align: center;
         /* ============ АДАПТИВ ============ */
         @media (max-width: 768px) {
             .owl-image {
-                width: 110px;
+                width: 160px;
             }
             .owl-letter {
-                font-size: 0.65rem;
-                padding: 6px 12px;
+                font-size: 0.7rem;
+                padding: 6px 14px;
             }
             .owl-hint {
-                font-size: 0.7rem;
-                bottom: -42px;
+                font-size: 0.75rem;
+                bottom: -45px;
             }
             .floating-element {
-                width: 45px;
-            }
-            .floating-element.snitch {
-                width: 35px;
-            }
-            .floating-element.broom {
                 width: 60px;
             }
-            .floating-element.lightning {
-                width: 40px;
-            }
-            .floating-element.hat {
+            .floating-element.snitch {
                 width: 50px;
             }
+            .floating-element.broom {
+                width: 90px;
+            }
+            .floating-element.lightning {
+                width: 60px;
+            }
+            .floating-element.hat {
+                width: 70px;
+            }
             .floating-element.crest {
-                width: 55px;
+                width: 75px;
             }
             .floating-element.wand {
-                width: 38px;
+                width: 55px;
             }
             .floating-element.hallows {
-                width: 42px;
+                width: 65px;
             }
             .scroll-parchment {
                 padding: 30px 20px 25px;
@@ -795,7 +770,7 @@ text-align: center;
                 height: 55px;
             }
             .train-chimney {
-width: 20px;
+                width: 20px;
                 height: 28px;
                 top: -25px;
                 left: 20px;
@@ -820,25 +795,40 @@ width: 20px;
         }
         @media (max-width: 480px) {
             .owl-image {
-                width: 85px;
+                width: 120px;
             }
             .owl-letter {
-                font-size: 0.55rem;
-                padding: 4px 8px;
-                margin-top: -10px;
+                font-size: 0.6rem;
+                padding: 5px 10px;
+                margin-top: -12px;
             }
             .owl-hint {
-                font-size: 0.6rem;
-                bottom: -35px;
+                font-size: 0.65rem;
+                bottom: -38px;
             }
             .floating-element {
-                width: 35px;
+                width: 45px;
             }
             .floating-element.snitch {
-                width: 28px;
+                width: 38px;
             }
             .floating-element.broom {
-                width: 45px;
+                width: 65px;
+            }
+            .floating-element.lightning {
+                width: 48px;
+            }
+            .floating-element.hat {
+                width: 55px;
+            }
+            .floating-element.crest {
+                width: 58px;
+            }
+            .floating-element.wand {
+                width: 42px;
+            }
+            .floating-element.hallows {
+                width: 50px;
             }
             .scroll-parchment {
                 padding: 25px 15px 20px;
@@ -890,61 +880,52 @@ width: 20px;
 
     <!-- ============ ПАРЯЩИЕ ЭЛЕМЕНТЫ (ИЗОБРАЖЕНИЯ) ============ -->
     <!-- Золотой снитч -->
-    <!-- ЗАМЕНИТЕ src НА ПУТЬ К ИЗОБРАЖЕНИЮ ЗОЛОТОГО СНИТЧА -->
     <div class="floating-element snitch" style="--dur:9s;--delay:0s;" title="Золотой снитч">
         <img src="images/snitch.png" alt="Золотой снитч">
     </div>
 
     <!-- Метла Нимбус-2000 -->
-    <!-- ЗАМЕНИТЕ src НА ПУТЬ К ИЗОБРАЖЕНИЮ МЕТЛЫ -->
     <div class="floating-element broom" style="--dur:11s;--delay:1.5s;" title="Нимбус-2000">
         <img src="images/nimbus.png" alt="Метла Нимбус-2000">
     </div>
 
     <!-- Очки и молния -->
-    <!-- ЗАМЕНИТЕ src НА ПУТЬ К ИЗОБРАЖЕНИЮ Очки и молния -->
     <div class="floating-element lightning" style="--dur:7s;--delay:0.8s;" title="Молния">
         <img src="images/ochki.png" alt="Очки и молния">
     </div>
 
     <!-- Распределяющая шляпа -->
-    <!-- ЗАМЕНИТЕ src НА ПУТЬ К ИЗОБРАЖЕНИЮ ШЛЯПЫ -->
     <div class="floating-element hat" style="--dur:13s;--delay:3s;" title="Распределяющая шляпа">
         <img src="images/schlapa.png" alt="Распределяющая шляпа">
     </div>
 
     <!-- Герб Хогвартса -->
-    <!-- ЗАМЕНИТЕ src НА ПУТЬ К ИЗОБРАЖЕНИЮ ГЕРБА -->
     <div class="floating-element crest" style="--dur:10s;--delay:2s;" title="Герб Хогвартса">
         <img src="images/gerb.png" alt="Герб Хогвартса">
     </div>
 
-   
     <!-- Знак Даров Смерти -->
-    <!-- ЗАМЕНИТЕ src НА ПУТЬ К ИЗОБРАЖЕНИЮ ДАРОВ СМЕРТИ -->
     <div class="floating-element hallows" style="--dur:12s;--delay:2.5s;" title="Дары Смерти">
         <img src="images/znak.png" alt="Дары Смерти">
     </div>
 
-     <!-- Фото Гарри -->
-    <!-- ЗАМЕНИТЕ src НА ПУТЬ К ИЗОБРАЖЕНИЮ Фото Гарри -->
-    <div class="floating-element hallows" style="--dur:12s;--delay:2.5s;" title="Фото Гарри">
+    <!-- Фото Гарри — теперь с классом crest (другая траектория) -->
+    <div class="floating-element crest" style="--dur:14s;--delay:4s;" title="Фото Гарри">
         <img src="images/foto.png" alt="Фото Гарри">
     </div>
- <!-- Газета -->
-    <!-- ЗАМЕНИТЕ src НА ПУТЬ К ИЗОБРАЖЕНИЮ Газета -->
-    <div class="floating-element hallows" style="--dur:12s;--delay:2.5s;" title="Газета">
+
+    <!-- Газета — теперь с классом hat (другая траектория) -->
+    <div class="floating-element hat" style="--dur:15s;--delay:5s;" title="Газета">
         <img src="images/gazeta.jpg" alt="Газета">
     </div>
- <!-- Палочка -->
-    <!-- ЗАМЕНИТЕ src НА ПУТЬ К ИЗОБРАЖЕНИЮ Палочка -->
-    <div class="floating-element hallows" style="--dur:12s;--delay:2.5s;" title="Палочка">
-        <img src="images/palochka.png <!-- Газета -->
+
+    <!-- Палочка — теперь с классом wand (исправлен синтаксис) -->
+    <div class="floating-element wand" style="--dur:8s;--delay:1s;" title="Палочка">
+        <img src="images/palochka.png" alt="Палочка">
     </div>
-    
-    <!-- ============ СОВА С ПИСЬМОМ (ИЗОБРАЖЕНИЕ) ============ -->
+
+    <!-- ============ СОВА С ПИСЬМОМ (СТАБИЛЬНАЯ, КЛИКАБЕЛЬНАЯ) ============ -->
     <div class="owl-container" id="owlContainer" title="Нажми, чтобы открыть письмо">
-        <!-- ЗАМЕНИТЕ src НА ПУТЬ К ИЗОБРАЖЕНИЮ СОВЫ -->
         <img src="images/sova3.jpg" alt="Сова с письмом" class="owl-image">
         <div class="owl-letter">📨 Письмо из Хогвартса</div>
         <div class="owl-hint">✨ Нажми на сову ✨</div>
@@ -964,8 +945,7 @@ width: 20px;
         </div>
     </div>
 
-    <!-- ============ АУДИО (ЗАМЕНИТЕ НА ВАШ ТРЕК) ============ -->
-    <!-- ЗАМЕНИТЕ src НА ПУТЬ К АУДИОФАЙЛУ (желательно .mp3) -->
+    <!-- ============ АУДИО ============ -->
     <audio id="bgMusic" loop preload="auto">
         <source src="images/gp.mp3" type="audio/mpeg">
         Ваш браузер не поддерживает аудио.
@@ -1021,7 +1001,7 @@ width: 20px;
 
             function stopMusic() {
                 bgMusic.pause();
-isMusicPlaying = false;
+                isMusicPlaying = false;
                 updateMusicButton();
             }
 
@@ -1033,14 +1013,11 @@ isMusicPlaying = false;
                 }
             }
 
-            // Попытка автозапуска
             window.addEventListener('DOMContentLoaded', () => {
-                // Пытаемся запустить музыку (может быть заблокировано)
                 bgMusic.volume = 0.5;
                 startMusic();
             });
 
-            // Запуск при первом взаимодействии пользователя (если автозапуск не сработал)
             document.addEventListener('click', function tryAutoplay() {
                 if (!isMusicPlaying && bgMusic.paused) {
                     startMusic();
@@ -1125,7 +1102,7 @@ isMusicPlaying = false;
                 }
             });
 
-scrollCloseBtn.addEventListener('click', (e) => {
+            scrollCloseBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 closeScroll();
             });
