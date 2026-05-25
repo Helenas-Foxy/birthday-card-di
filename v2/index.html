@@ -368,7 +368,7 @@
             background: linear-gradient(180deg,
                     #f7e8c8 0%, #f4e0b8 3%, #fdf4e0 8%, #f5e4c0 30%, #fdf5e6 50%, #f4e0b8 70%, #fdf4e0 92%, #f4e0b8 97%, #e8d5a8 100%);
             border-radius: 8px;
-            padding: 40px 35px 35px;
+            padding: 40px 35px 60px;
             position: relative;
             box-shadow:
                 0 20px 60px rgba(0, 0, 0, 0.7),
@@ -399,8 +399,8 @@
         }
         .wax-seal {
             position: absolute;
-            bottom: 30px;
-            right: 30px;
+            bottom: -15px;   /* опускаем печать ниже края свитка */
+            right: 20px;     /* чуть подвинем вправо */
             width: 50px;
             height: 50px;
             background: radial-gradient(circle at 40% 35%, #c41e3a, #7a1022);
@@ -440,6 +440,7 @@
         .scroll-content {
             position: relative;
             z-index: 3;
+            display: block;            /* вместо flex */
             text-align: center;
             font-family: 'Georgia', 'Times New Roman', serif;
             color: #3a1a0a;
@@ -447,11 +448,11 @@
             line-height: 1.9;
             letter-spacing: 0.5px;
             min-height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+            /* добавляем правила переноса */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            }
         .scroll-content .revealed-text {
             display: inline;
         }
@@ -537,7 +538,7 @@
                 width: 60px;
             }
             .scroll-parchment {
-                padding: 30px 20px 25px;
+                padding: 30px 20px 50px;
             }
             .scroll-content {
                 font-size: 1rem;
@@ -599,7 +600,7 @@
                 width: 45px;
             }
             .scroll-parchment {
-                padding: 25px 15px 20px;
+                padding: 25px 15px 45px;
             }
             .scroll-content {
                 font-size: 0.85rem;
